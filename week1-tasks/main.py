@@ -36,11 +36,16 @@ def load_contacts(filename):
         with open(filename, 'r') as file:
             lines = file.readlines()
             for line in lines:
-                name, phone = line.strip().split(',')
-                contacts[name] = phone
+                line = line.strip()
+                if line.count(',') == 1:
+                    name, phone = line.split(',')
+                    contacts[name] = phone
+                else:
+                    print(f"Ignoring invalid line: {line}")
     except FileNotFoundError:
         pass
     return contacts
+
 def main():
     filename = "contacts.txt"
     contacts = load_contacts(filename)
@@ -59,7 +64,12 @@ def main():
         if choice == '1':
             name = input("Enter the name: ")
             phone = input("Enter the phone number: ")
-            add_contact(contacts, name, phone)
+            if len(phone) == 10 and phone.isdigit():
+                add_contact(contacts,name,phone)
+            else:
+                print("Invalid phone number. Please enter a 10-digit number.")
+
+
         elif choice == '2':
             Search_contact = input('Enter the name')
             if Search_contact in contacts:
